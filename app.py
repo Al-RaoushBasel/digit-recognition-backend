@@ -22,7 +22,7 @@ def load_model():
 
 def preprocess_image(image):
     """Preprocess image to match model input format"""
-    img = Image.open(io.BytesIO(image)).convert("L")  # Convert to grayscale
+    img = Image.open(io.BytesIO(image)).convert("RGB")  # Convert 
     img = ImageOps.invert(img)  # Invert colors (black digit on white background)
     img = ImageOps.pad(img, (280, 280), color=255)  # Pad to make square
     img = img.resize((32, 32))  # Resize to model input size
