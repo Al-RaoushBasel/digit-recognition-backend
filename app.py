@@ -21,14 +21,18 @@ def load_model():
     return tf.keras.models.load_model(MODEL_PATH)
 
 def preprocess_image(image):
-    """Preprocess image to match model input format"""
-    img = Image.open(io.BytesIO(image)).convert("RGB")  # Convert 
+    img = Image.open(io.BytesIO(image)).convert("L")  # Keep grayscale
     img = ImageOps.invert(img)  # Invert colors (black digit on white background)
-    img = ImageOps.pad(img, (280, 280), color=255)  # Pad to make square
+    img = ImageOps.pad(img, (280, 280), color=255)  # Ensure square padding
     img = img.resize((32, 32))  # Resize to model input size
+    
     img = np.array(img).astype("float32") / 255.0  # Normalize to [0,1]
-    img = np.expand_dims(img, axis=(0, -1))  # Add batch and channel dims
+    img = np.expand_dims(img, axis=0)  # Add batch dimension
+    
+    img = np.stack([img] * 3, axis=-1)  # Shape becomes (1, 32, 32, 3)
+
     return img
+
 
 @app.route("/predict", methods=["POST"])
 def predict():
