@@ -11,7 +11,8 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS so frontend can call the API
 
 # Load the trained model
-MODEL_PATH = "C:/dev/digit-recognition/backend/digit_model.h5"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "digit_model.h5")
   # Model is in backend root
 if not os.path.exists(MODEL_PATH):
     raise FileNotFoundError(f"Model file not found: {MODEL_PATH}")
